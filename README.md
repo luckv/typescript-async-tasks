@@ -8,7 +8,7 @@ The classes:
 
 - [`TasksPool`](#lib-taskspool) in the file `tasks-pool.ts`. Handles concurrent work, but can apply a limit to the parallelization of tasks.
 
-- `TasksQueue` in the file `tasks-queue.ts`. Handles a queue of tasks, that need to be executed in sequence, with an optional retry policy that uses exponential backoff.
+- `[TasksQueue](#lib)` in the file `tasks-queue.ts`. Handles a queue of tasks, that need to be executed in sequence, with an optional retry policy that uses exponential backoff.
 
 ## Taking advantage of the thread model of NodeJS and the use of `EventEmitter`
 
@@ -31,7 +31,7 @@ The solution was to use an instance of the `EventEmitter` class, a private prope
 
 # <a id="lib-taskspool" /> TasksPool
 
-All the code is the file `tasks-pool.ts`. The work is handled in form of `Promise<void>` and is called '*task*'. The errors of the rejected promise task's are printed to the logger.
+All the code is in the file `tasks-pool.ts`. The work is handled in form of `Promise<void>` and is called '*task*'. The errors of the rejected promise task's are printed to the logger.
 
 ### Features
 
@@ -62,7 +62,34 @@ The solution was to use an instance of the `EventEmitter` class, a private prope
 
 Taking advantage of the thread model of NodeJS and the use of `EventEmitter`
 
-# Use the library
+# <a id="lib-tasksqueue" /> TasksQueue
+
+All the code is in the file `tasks-queue.ts`. The work is handled in form of tasks creator, `() => Promise<T>`, every invocation of the callback correspond to a task execution.
+
+An optional retry policy can be set to choose when to retry a failed task.
+
+All work added to the queue is guaranteed to never be executed in parallell with other work submitted to this class, and respecting a FIFO (First In First Out) policy.
+
+### Features
+
+- Transparent sequential execution of tasks. All work added to the queue is guaranteed to be executed sequentially.
+- When work is added, a promise is returned that wrap the entire task execution, with its retries.
+- Waiting for all task in the queue to be completed.
+- Apply a retry policy when a task fails. It's optional and if not applied the task will not be retried at the first fail.
+
+### Why?
+
+I had a problem with an external service we used at work, that has a limit of 1 invocation a time from the same client. It was not a problem of rate at which these invocations were made, but the invocations couldn't be done in parallel.
+
+This was for me a major issue, because those invocations were made as a result of bigger parallel work on a set of data. And making all that work sequential, wasn't a feasible option.
+
+So i decided to write this solution to permit to continue to invoke the service in parallel, but with a 'layer', that was `TasksQueue`, that transparently enforces sequential executions and retries on fail.
+
+Maybe there were better solution to my problem. Anyway, I'll keep this code here to prove, to anyone who visits my profile, my skills and my dedication of solving problems.
+
+
+
+# Use the classes
 
 ## Pass a custom logger
 
@@ -70,7 +97,7 @@ The class constructors accepts an optional object to be used as custom logger in
 
 ## Build javascript
 
-The `build` script generate javascript code to be used in a codebase without typescript. Code is not minified and comments are not removed.
+The `build` script generate javascript code to be used in a codebase without typescript. Code is not minified and comments and jsdocs are not removed.
 
 ```
 $ npm run build
