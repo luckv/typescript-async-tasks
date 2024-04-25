@@ -25,7 +25,7 @@ type TaskDescriptor<T> = {
     readonly retryState: RetryState;
 };
 
-enum TaskQueueEvents {
+const enum TaskQueueEvents {
     TASK_ADDED = "task-added",
     TASK_STARTED = "task-started",
     TASK_ERROR_EVALUATE_RETRY = "task-error-evaluate-retry",
