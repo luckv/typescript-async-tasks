@@ -2,13 +2,13 @@ Sorry for my terrible english, if you see any errors.
 
 # Do work concurrently in NodeJS
 
-A simple collection of classes available for public usage (it's a MIT license) to handle concurrent work in NodeJS. All the code is under the directory `src` 
+A simple collection of classes available for public usage (it's a MIT license) to handle concurrent work in NodeJS. All the code is under the directory `src`
 
 The classes:
 
 - [`TasksPool`](#lib-taskspool) in the file `tasks-pool.ts`. Handles concurrent work, but can apply a limit to the parallelization of tasks.
 
-- `[TasksQueue](#lib)` in the file `tasks-queue.ts`. Handles a queue of tasks, that need to be executed in sequence, with an optional retry policy that uses exponential backoff.
+- [`TasksQueue`](#lib-tasksqueue) in the file `tasks-queue.ts`. Handles a queue of tasks, that need to be executed in sequence, with an optional retry policy that uses exponential backoff.
 
 ## Taking advantage of the thread model of NodeJS and the use of `EventEmitter`
 
