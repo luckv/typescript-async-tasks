@@ -102,3 +102,11 @@ The `build` script generate javascript code to be used in a codebase without typ
 ```
 $ npm run build
 ```
+
+## Run test
+
+The `test` script use jest to run tests on the classes of this repository
+
+```
+$ npm test
+```
